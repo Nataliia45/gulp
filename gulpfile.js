@@ -2,6 +2,7 @@ const gulp = require('gulp');
 const sass = require('sass');
 const gulpSass = require('gulp-sass');
 const minify = require('gulp-uglify-es').default;
+const concat = require('gulp-concat');
 
 const scss = gulpSass(sass);
 
@@ -17,6 +18,7 @@ function watcher() {
 function jsBuild() {
     return gulp.src(SRC_FOLDER)
     .pipe(minify())
+    .pipe(concat('build.js'))
     .pipe(gulp.dest(BUILD_JS_FOLDER));
 }
 
