@@ -18,7 +18,7 @@ function watcher() {
 function jsBuild() {
     return gulp.src(SRC_FOLDER)
     .pipe(minify())
-    .pipe(concat('build.js'))
+    .pipe(concat('build.min.js'))
     .pipe(gulp.dest(BUILD_JS_FOLDER));
 }
 
