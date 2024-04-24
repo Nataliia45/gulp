@@ -3,6 +3,7 @@ const sass = require('sass');
 const gulpSass = require('gulp-sass');
 const minify = require('gulp-uglify-es').default;
 const concat = require('gulp-concat');
+const eslint = require('gulp-eslint');
 
 const scss = gulpSass(sass);
 
@@ -17,6 +18,9 @@ function watcher() {
 
 function jsBuild() {
     return gulp.src(SRC_FOLDER)
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError())
     .pipe(minify())
     .pipe(concat('build.min.js'))
     .pipe(gulp.dest(BUILD_JS_FOLDER));
@@ -27,5 +31,6 @@ function scssTask(){
     .pipe(scss())
     .pipe(gulp.dest(BUILD_CSS_FOLDER));
 }
+
 
 gulp.task('default', gulp.series(jsBuild, scssTask, watcher));
