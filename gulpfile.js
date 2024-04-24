@@ -4,6 +4,7 @@ const gulpSass = require('gulp-sass');
 const minify = require('gulp-uglify-es').default;
 const concat = require('gulp-concat');
 const eslint = require('gulp-eslint');
+const browserSync = require('browser-sync').create();
 
 const scss = gulpSass(sass);
 
@@ -13,7 +14,14 @@ const SRC_FOLDER = './src/js/*.js';
 const SRC_FOLDER_SCSS = './src/styles/*.scss';
 
 function watcher() {
-    return gulp.watch(SRC_FOLDER, jsBuild);
+    browserSync.init({
+        server: {
+            baseDir: './dist'
+        }
+    });
+
+    gulp.watch(SRC_FOLDER, jsBuild).on('change', browserSync.reload);
+    gulp.watch(SRC_FOLDER_SCSS, scssTask).on('change', browserSync.reload);
 }
 
 function jsBuild() {
@@ -23,13 +31,15 @@ function jsBuild() {
     .pipe(eslint.failAfterError())
     .pipe(minify())
     .pipe(concat('build.min.js'))
-    .pipe(gulp.dest(BUILD_JS_FOLDER));
+    .pipe(gulp.dest(BUILD_JS_FOLDER))
+    .pipe(browserSync.stream());;
 }
 
 function scssTask(){
     return gulp.src(SRC_FOLDER_SCSS)
     .pipe(scss())
-    .pipe(gulp.dest(BUILD_CSS_FOLDER));
+    .pipe(gulp.dest(BUILD_CSS_FOLDER))
+    .pipe(browserSync.stream());
 }
 
 
